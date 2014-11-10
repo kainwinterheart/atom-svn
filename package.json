@@ -1,0 +1,16 @@
+{
+  "name": "atom-svn",
+  "main": "./lib/atom-svn",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationCommands": {
+    "atom-workspace": "atom-svn:toggle"
+  },
+  "repository": "https://github.com/atom/atom-svn",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}
