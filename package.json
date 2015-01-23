@@ -1,16 +1,15 @@
 {
   "name": "atom-svn",
   "main": "./lib/atom-svn",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "description": "A short description of your package",
-  "activationCommands": {
-    "atom-workspace": "atom-svn:toggle"
-  },
-  "repository": "https://github.com/atom/atom-svn",
+  "repository": "https://github.com/kainwinterheart/atom-svn",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
   },
   "dependencies": {
+    "emissary": "~1.2.1",
+    "fs-plus": "^2.2.0"
   }
 }

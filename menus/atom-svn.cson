@@ -2,8 +2,20 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle atom-svn'
-      'command': 'atom-svn:toggle'
+      'label': 'Svn diff'
+      'command': 'atom-svn:diff'
+    },
+    {
+      'label': 'Svn add'
+      'command': 'atom-svn:add'
+    },
+    {
+      'label': 'Svn update'
+      'command': 'atom-svn:update'
+    },
+    {
+      'label': 'Svn log'
+      'command': 'atom-svn:log'
     }
   ]
 'menu': [
@@ -13,8 +25,20 @@
       'label': 'atom-svn'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'atom-svn:toggle'
+          'label': 'Diff'
+          'command': 'atom-svn:diff'
+        },
+        {
+          'label': 'Add'
+          'command': 'atom-svn:add'
+        },
+        {
+          'label': 'Update'
+          'command': 'atom-svn:update'
+        },
+        {
+          'label': 'Log'
+          'command': 'atom-svn:log'
         }
       ]
     ]
