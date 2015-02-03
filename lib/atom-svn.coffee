@@ -10,6 +10,7 @@ module.exports =
     atom.workspaceView.command 'atom-svn:add', -> AtomSvnAPI.add()
     atom.workspaceView.command 'atom-svn:update', -> AtomSvnAPI.update()
     atom.workspaceView.command 'atom-svn:log', -> AtomSvnAPI.log()
+    atom.workspaceView.command 'atom-svn:blame', -> AtomSvnAPI.blame()
 
   deactivate: ->
     @atomSvnView.destroy()

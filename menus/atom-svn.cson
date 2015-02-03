@@ -16,6 +16,10 @@
     {
       'label': 'Svn log'
       'command': 'atom-svn:log'
+    },
+    {
+      'label': 'Svn blame'
+      'command': 'atom-svn:blame'
     }
   ]
 'menu': [
@@ -39,6 +43,10 @@
         {
           'label': 'Log'
           'command': 'atom-svn:log'
+        },
+        {
+          'label': 'Blame'
+          'command': 'atom-svn:blame'
         }
       ]
     ]

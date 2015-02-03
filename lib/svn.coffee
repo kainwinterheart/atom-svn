@@ -7,6 +7,7 @@ Path = require 'path'
 diffFilePath = Path.join Os.tmpDir(), "atom_svn.diff"
 logFilePath = Path.join Os.tmpDir(), "atom_svn.log"
 updateFilePath = Path.join Os.tmpDir(), "atom_svn.update"
+blameFilePath = Path.join Os.tmpDir(), "atom_svn.blame"
 
 class StatusView extends View
     Subscriber.includeInto(this)
@@ -126,6 +127,16 @@ svn =
             stdout: stdout ? (data) -> logStat += data
             stderr: stderr if stderr?
             exit: (code) -> self.prepFile( logFilePath, logStat ) if code is 0
+
+    blame: ( {file, stdout, stderr, exit} = {} ) ->
+        self = this
+        file ?= self.relativize(atom.workspace.getActiveEditor()?.getPath())
+        blameStat = ''
+        this.cmd
+            args: ['blame', file ? '.']
+            stdout: stdout ? (data) -> blameStat += data
+            stderr: stderr if stderr?
+            exit: (code) -> self.prepFile( blameFilePath, blameStat ) if code is 0
 
     # returns filepath relativized for either a submodule, repository or a project
     relativize: (path) ->
