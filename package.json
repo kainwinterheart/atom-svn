@@ -1,7 +1,7 @@
 {
   "name": "atom-svn",
   "main": "./lib/atom-svn",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A short description of your package",
   "repository": "https://github.com/kainwinterheart/atom-svn",
   "license": "MIT",
