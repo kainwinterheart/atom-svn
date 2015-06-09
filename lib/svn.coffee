@@ -23,9 +23,9 @@ class StatusView extends View
     initialize: ->
         disposables = new CompositeDisposable
         focusCallback = ->
-        $(window).on 'core:cancel', focusCallback
-        disposables.add new Disposable ->
-            $(window).off 'core:cancel', focusCallback
+        disposables.add atom.commands.add 'atom-workspace',
+            'core:cancel': focusCallback
+            'core:close': focusCallback
 
         @panel ?= atom.workspace.addBottomPanel(item: this)
         @panel.show()
