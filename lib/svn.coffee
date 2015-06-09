@@ -14,8 +14,11 @@ class StatusView extends View
     Subscriber.includeInto(this)
 
     @content = (params) ->
-        @div class: 'atom-svn overlay from-bottom', =>
+        @div class: 'atom-svn', =>
             @div class: "#{params.type} message", params.message
+
+    cancelled: ->
+        @hide
 
     initialize: ->
         disposables = new CompositeDisposable
@@ -24,12 +27,12 @@ class StatusView extends View
         disposables.add new Disposable ->
             $(window).off 'core:cancel', focusCallback
 
-        @panel ?= atom.workspace.addModalPanel(item: this)
+        @panel ?= atom.workspace.addBottomPanel(item: this)
         @panel.show()
 
         setTimeout =>
             @hide()
-        , ( atom.config.get('atom-svn.messageTimeout') ? 10 ) * 1000
+        , ( atom.config.get('atom-svn.messageTimeout') ? 7 ) * 1000
 
     hide: ->
         @panel?.hide()
