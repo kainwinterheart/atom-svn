@@ -1,6 +1,6 @@
 {Subscriber} = require 'emissary'
-{BufferedProcess, $} = require 'atom'
-{View} = require 'atom-space-pen-views'
+{BufferedProcess, Disposable, CompositeDisposable} = require 'atom'
+{View, $} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
 Os = require 'os'
 Path = require 'path'
@@ -18,21 +18,27 @@ class StatusView extends View
             @div class: "#{params.type} message", params.message
 
     initialize: ->
-        @subscribe $(window), 'core:cancel', => @detach()
-        atom.workspaceView.append(this)
+        disposables = new CompositeDisposable
+        focusCallback = ->
+        $(window).on 'core:cancel', focusCallback
+        disposables.add new Disposable ->
+            $(window).off 'core:cancel', focusCallback
+
+        @panel ?= atom.workspace.addModalPanel(item: this)
+        @panel.show()
+
         setTimeout =>
-            @detach()
+            @hide()
         , ( atom.config.get('atom-svn.messageTimeout') ? 10 ) * 1000
 
-    detach: ->
-        super
-        @unsubscribe()
+    hide: ->
+        @panel?.hide()
 
 svn =
     cmd: ( {args, opts, stdout, stderr, exit} = {} ) ->
         command = 'svn'
         opts ?= {}
-        opts.cwd ?= atom.project.getPath()
+        opts.cwd ?= atom.project.getPaths()[0]
         opts.env ?= process.env
         opts.env.LANG ?= ( atom.config.get('atom-svn.shellLang') ? 'en_US.UTF-8' )
         stderr ?= (data) ->
@@ -58,7 +64,7 @@ svn =
             exit: exit
 
     add: ( {file, stdout, stderr, exit} = {} ) ->
-        file ?= this.relativize(atom.workspace.getActiveEditor()?.getPath())
+        file ?= this.relativize(atom.workspace.getActivePaneItem()?.buffer?.file?.path)
         exit ?= (code) ->
             if code is 0
                 new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
@@ -79,7 +85,7 @@ svn =
 
     update: ( {file, stdout, stderr, exit} = {} ) ->
         self = this
-        file ?= self.relativize(atom.workspace.getActiveEditor()?.getPath())
+        file ?= self.relativize(atom.workspace.getActivePaneItem()?.buffer?.file?.path)
 
         new StatusView(type: 'success', message: "Updating #{file ? 'all files'}, please wait...")
 
@@ -111,7 +117,7 @@ svn =
 
     diff: ( {file, stdout, stderr, exit} = {} ) ->
         self = this
-        file ?= self.relativize(atom.workspace.getActiveEditor()?.getPath())
+        file ?= self.relativize(atom.workspace.getActivePaneItem()?.buffer?.file?.path)
         diffStat = ''
         this.cmd
             args: ['diff', file ? '.']
@@ -121,7 +127,7 @@ svn =
 
     log: ( {file, stdout, stderr, exit} = {} ) ->
         self = this
-        file ?= self.relativize(atom.workspace.getActiveEditor()?.getPath())
+        file ?= self.relativize(atom.workspace.getActivePaneItem()?.buffer?.file?.path)
         logStat = ''
         this.cmd
             args: ['log', file ? '.']
@@ -131,7 +137,7 @@ svn =
 
     blame: ( {file, stdout, stderr, exit} = {} ) ->
         self = this
-        file ?= self.relativize(atom.workspace.getActiveEditor()?.getPath())
+        file ?= self.relativize(atom.workspace.getActivePaneItem()?.buffer?.file?.path)
         blameStat = ''
         this.cmd
             args: ['blame', file ? '.']
@@ -141,7 +147,7 @@ svn =
 
     # returns filepath relativized for either a submodule, repository or a project
     relativize: (path) ->
-        atom.project.getRepo()?.relativize(path) ? atom.project.relativize(path)
+        atom.project.relativize(path)
 
     prepFile: (path, text) ->
         if text?.length > 0
