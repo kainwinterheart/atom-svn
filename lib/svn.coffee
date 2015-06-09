@@ -1,5 +1,6 @@
 {Subscriber} = require 'emissary'
-{BufferedProcess, $, View} = require 'atom'
+{BufferedProcess, $} = require 'atom'
+{View} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
 Os = require 'os'
 Path = require 'path'
